@@ -25,8 +25,10 @@ from rest_framework.views import APIView
 from django.views import View
 # Create your views here.
 
+from django.conf import settings
 import base64
 from tomy.salt import saltgen
+from .models import Log
 
 class EntryPoint(APIView):
     # queryset = FoodMenu.objects.all()
@@ -42,29 +44,32 @@ class EntryPoint(APIView):
     def post(self, *args, **kwargs):
         _status = 0
         _message = "sucess"
+        # print(settings.BASE_DIR)
         try:
             _message = "try to retrive post data"
             print(_message)
-            postdata = self.request.POST.get("enc")
+            data = self.request.data
             _message = "data retrived"
-            print(postdata)
-            try:
-                _message = "parsing data"
-                print(_message)
-                head,normalized = postdata.split(",")
-                print("headder")
-                print(head)
-                print("encoded data")
-                print(normalized)
-                _message = "data decoded sucess"
-                image_name = "../media/"+saltgen(5) + ".jpeg"
-                fh = open(image_name, "wb")
-                fh.write(normalized.decode('base64'))
-                fh.close()
-            except:
-                _message = "unable to parse data"
+            print(data)
+            postdata = data["enc"]
+            _message = "parsing data"
+            print(_message)
+            head,normalized = postdata.split(",")
+            print("headder")
+            print(head)
+            print("encoded data")
+            print(normalized)
+            _message = "data decoded sucess"
+            image_name = settings.BASE_DIR + "/media/" + saltgen(5) + ".jpeg"
+            print(image_name)
+            fh = open(image_name, "wb")
+            fh.write(normalized.decode('base64'))
+            fh.close()
+            # this = Log()
+            # this.image = normalized.decode('base64')
+            # this.save()
         except:
-            _message = "unable to pase data"
+            _message = "error occured after : {0}".format(_message)
             print(_message)
         
         resp = {
