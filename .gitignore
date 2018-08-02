@@ -1,0 +1,13 @@
+__pycache__
+*.pyc
+*~
+webcam
+myvenv
+.idea
+db.sqlite3
+/static
+/media
+/downloads
+.idea
+.DS_Store
+
