@@ -26,6 +26,7 @@ from django.views import View
 # Create your views here.
 
 from django.conf import settings
+import sys
 import base64
 from tomy.salt import saltgen
 from .models import Log
@@ -45,6 +46,8 @@ class EntryPoint(APIView):
         _status = 0
         _message = "sucess"
         # print(settings.BASE_DIR)
+       
+
         try:
             _message = "try to retrive post data"
             print(_message)
@@ -60,14 +63,17 @@ class EntryPoint(APIView):
             print("encoded data")
             print(normalized)
             _message = "data decoded sucess"
-            image_name = settings.BASE_DIR + "/media/" + saltgen(5) + ".jpeg"
-            print(image_name)
-            fh = open(image_name, "wb")
-            fh.write(normalized.decode('base64'))
+            image_name =  saltgen(5) + ".jpeg"
+            full_url = settings.BASE_DIR + "/media/" + image_name
+            print(full_url)
+            fh = open(full_url, "wb")
+            fh.write(base64.b64decode(normalized))
             fh.close()
-            # this = Log()
-            # this.image = normalized.decode('base64')
-            # this.save()
+            _message = "image saved sucess"
+            this = Log(image_url=image_name)
+            this.save()
+            _message = "db updates sucess"
+            _status = 1
         except:
             _message = "error occured after : {0}".format(_message)
             print(_message)

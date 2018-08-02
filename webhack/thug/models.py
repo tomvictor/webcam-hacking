@@ -8,9 +8,10 @@ def directory_path(instance, filename):
     return 'images/'
 
 class Log(models.Model):
-    image = models.FileField(upload_to=directory_path, null=True, blank=True)
+    # image = models.FileField(upload_to=directory_path, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    image_url = models.CharField(max_length = 2000, blank=True)
 
     def __str__(self):
         return str(self.timestamp)
